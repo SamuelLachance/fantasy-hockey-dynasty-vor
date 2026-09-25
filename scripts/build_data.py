@@ -216,13 +216,17 @@ def main():
         for pid, d in blk.items():
             acc = hist_sk.setdefault(pid, {})
             for k, v in d.items():
-                if isinstance(v, (int, float)):
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
                     acc[k] = acc.get(k, 0) + v
+                elif isinstance(v, str):
+                    acc[k] = v  # keep positionCode etc.
         for pid, d in (goalie_block(season_cay(s), False) or {}).items():
             acc = hist_go.setdefault(pid, {})
             for k, v in d.items():
-                if isinstance(v, (int, float)):
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
                     acc[k] = acc.get(k, 0) + v
+                elif isinstance(v, str):
+                    acc[k] = v  # keep positionCode etc.
         for kind in ("skater", "goalie"):
             for r in stats_report(kind, "bios", season_cay(s)) or []:
                 bio_rows[r["playerId"]] = r
@@ -238,6 +242,10 @@ def main():
         da = [v for v in hist_sk.values() if v.get("positionCode") == "D"]
         a1_f = sum(v.get("totalPrimaryAssists", 0) for v in fa) / max(1, sum(v.get("assists", 0) for v in fa))
         a1_d = sum(v.get("totalPrimaryAssists", 0) for v in da) / max(1, sum(v.get("assists", 0) for v in da))
+    if not 0.35 < a1_f < 0.75:
+        a1_f = 0.55
+    if not 0.30 < a1_d < 0.70:
+        a1_d = 0.47
     d_rows = [v for v in hist_sk.values() if v.get("positionCode") == "D"]
     tk_d = (sum(v.get("takeaways", 0) for v in d_rows) / max(1, sum(v.get("gamesPlayed", 0) for v in d_rows))) if d_rows else 0.28
     ot_share = (tot(hist_sk, "otGoals") / tot(hist_sk, "goals")) if tot(hist_sk, "goals") > 1000 else 0.022
