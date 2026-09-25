@@ -1,0 +1,54 @@
+name: Build & deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # 6h30 and 12h30 (Eastern): fresh stats before morning and afternoon lineup locks
+    - cron: "30 10 * * *"
+    - cron: "30 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build data (NHL API + base projections)
+        run: python scripts/build_data.py
+      - name: Sanity check
+        run: |
+          python - <<'PY'
+          import json
+          d = json.load(open("site/data.json"))
+          assert len(d["players"]) > 800, len(d["players"])
+          print(len(d["players"]), "players,", len(d["schedule"]), "schedule days", d["rates"])
+          PY
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
