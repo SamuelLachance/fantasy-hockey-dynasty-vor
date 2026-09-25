@@ -6,7 +6,7 @@ Classement de tous les joueurs de la LNH pour une ligue Fantrax dynasty par poin
 
 - `scripts/build_data.py` : projections de base du modèle fantasy-hockey-vor + stats de l'API LNH → `site/data.json` (Python, bibliothèque standard seulement).
 - `site/` : page statique ; le VOR se calcule dans le navigateur (nombre d'équipes modifiable).
-- `.github/workflows/deploy.yml` : reconstruit et publie sur GitHub Pages à chaque push et deux fois par jour.
+- `.github/workflows/deploy.yml` : reconstruit les données et publie `site/` sur la branche `gh-pages` (GitHub Pages) à chaque push et deux fois par jour.
 
 Tester localement :
 
