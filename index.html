@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dynasty VOR · Fantrax points</title>
+<meta name="description" content="Classement VOR dynasty de tous les joueurs de la LNH pour une ligue Fantrax par points, ajusté à l'âge.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏒</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Dynasty VOR</h1>
+    <p class="sub">Ligue Fantrax par points · 2026-27 · <span id="updated">…</span></p>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-view="dynasty" aria-selected="true">Dynasty</button>
+    <button role="tab" data-view="season">Cette saison</button>
+    <button role="tab" data-view="daily">Au jour le jour</button>
+    <button role="tab" data-view="method">Méthode</button>
+  </nav>
+</header>
+
+<section class="controls" id="controls">
+  <input id="q" type="search" placeholder="Chercher un joueur ou une équipe (ex. MTL)" autocomplete="off">
+  <div class="chips" id="pos">
+    <button data-pos="ALL" class="on">Tous</button>
+    <button data-pos="C">C</button>
+    <button data-pos="W">W</button>
+    <button data-pos="D">D</button>
+    <button data-pos="G">G</button>
+  </div>
+  <div class="chips" id="who">
+    <button data-who="all" class="on">Tous</button>
+    <button data-who="free">Disponibles</button>
+    <button data-who="mine">Mon équipe</button>
+  </div>
+  <label class="num">Équipes <input id="teams" type="number" min="6" max="32" value="12"></label>
+  <label class="num">Âge max <input id="agemax" type="number" min="18" max="45" placeholder="—"></label>
+</section>
+
+<main>
+  <div id="summary" class="summary"></div>
+  <div class="tablewrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+  <p class="hint" id="hint">☆ = mon équipe · ✕ = pris par une autre équipe (sauvegardé sur cet appareil). Clique sur un joueur pour le détail.</p>
+  <article id="method" class="method" hidden></article>
+</main>
+
+<dialog id="detail"><div id="detailBody"></div><form method="dialog"><button class="close">Fermer</button></form></dialog>
+
+<footer>Projections de base : modèle fantasy-hockey-vor. Stats : API de la LNH. Mise à jour automatique chaque jour. Non affilié à la LNH ni à Fantrax.</footer>
+<script src="app.js"></script>
+</body>
+</html>
